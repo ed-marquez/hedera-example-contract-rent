@@ -1,4 +1,4 @@
-import { ContractCreateFlow, ContractUpdateTransaction, ContractExecuteTransaction, ContractCallQuery } from "@hashgraph/sdk";
+import { ContractCreateFlow, ContractUpdateTransaction, ContractExecuteTransaction, ContractCallQuery, Timestamp } from "@hashgraph/sdk";
 
 export async function deployContractFcn(bytecode, params, gasLim, autorenewAcc, autorenewAccKey, cAdminKey, client) {
 	const contractCreateTx = new ContractCreateFlow()
@@ -18,11 +18,13 @@ export async function deployContractFcn(bytecode, params, gasLim, autorenewAcc, 
 }
 
 export async function updateContractFcn(cId, cAdminKey, client) {
+	// const newExpirationTime = new Timestamp(1682098273);
+
 	const contractUpdateTx = new ContractUpdateTransaction()
 		.setContractId(cId)
 		.setAutoRenewPeriod(8000001) //  Default: 7776000sec = 90days. [2592000 (30 days) to 8000001 (92.5 days)]
 		// .setAutoRenewAccountId(autorenewAcc);
-		// .setContractExpirationTime(newExpirationTime);
+		// .setExpirationTime(newExpirationTime)
 		.freezeWith(client);
 	const contractUpdateSign = await contractUpdateTx.sign(cAdminKey);
 	const contractUpdateSubmit = await contractUpdateSign.execute(client);
